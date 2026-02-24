@@ -12,6 +12,10 @@ export default async function HomePage() {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
   const { user } = await payload.auth({ headers })
+  const { docs: cards } = await payload.find({
+    collection: 'card',
+    pagination: false,
+  })
 
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
 
@@ -47,6 +51,18 @@ export default async function HomePage() {
             Documentation
           </a>
         </div>
+        <>
+        {cards?.length>0 && (
+          <div>
+            <h2>Cards</h2>
+            <ul>
+              {cards.map(card => (
+                <li key={card.id}>{card.title}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        </>
       </div>
       <div className="footer">
         <p>Update this page by editing</p>
